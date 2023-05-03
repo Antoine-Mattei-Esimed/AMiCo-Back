@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  postgres-svc:
+    image: postgres
+    env_file: .env.docker
+    ports:
+      - "5432:5432"
+    volumes:
+      - amico-backend-data:/var/lib/postgresql/data
+
+volumes:
+  amico-backend-data:
