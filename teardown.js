@@ -1,6 +1,6 @@
-const { sequelize } = require('../../src/models/sqlite.db');
+const { sequelize } = require('./src/models/db');
 
 module.exports = async () => {
   global.webServer.stop();
-  sequelize.truncate();
+  await sequelize.truncate();
 }
