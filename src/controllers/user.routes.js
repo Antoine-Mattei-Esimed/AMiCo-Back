@@ -1,47 +1,57 @@
-const express = require( "express" );
-const router = express.Router();
-const userRepository = require( "../models/user-repository" );
+/*
+ * AMiCo - Logiciel de gestion de micro-entreprises.
+ * Copyright (c) 2023 - Antoine Mattei
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+const express          = require( "express" );
+const router           = express.Router();
+const userRepository   = require( "../models/user-repository" );
 const { validateBody } = require( "./validation/route.validator" );
-const { body } = require( "express-validator" );
-const guard = require( "express-jwt-permissions" )(
-	{
-		requestProperty : "auth"
-	} );
-
-router.get( "/",
-            async (
-	            req,
-	            res
-            ) => {
-	            res.send( await userRepository.getUsers() );
-            } );
-
-router.get( "/:firstName",
-            guard.check( "admin" ),
-            async (
-	            req,
-	            res
-            ) => {
-	            const foundUser = await userRepository.getUserByFirstName( req.params.firstName );
-	            
-	            if ( !foundUser ) {
-		            res.status( 500 )
-		               .send( "User not found" );
-		            return;
-	            }
-	            
-	            res.send( foundUser );
-            } );
+const { body }         = require( "express-validator" );
 
 router.post(
 	"/",
-	body( "firstName" )
+	body( "prenom" )
+		.isString()
 		.notEmpty(),
-	body( "lastName" )
+	body( "nom" )
+		.isString()
 		.notEmpty(),
 	body( "password" )
+		.isString()
 		.notEmpty()
 		.isLength( { min : 8 } ),
+	body( "dateNaissance" )
+		.isDate()
+		.notEmpty(),
+	body( "adresse" )
+		.isString()
+		.notEmpty(),
+	body( "email" )
+		.isEmail()
+		.notEmpty(),
+	body( "telephone" )
+		.isString()
+		.notEmpty(),
+	body( "caAnnuelMax" )
+		.isInt()
+		.notEmpty(),
+	body( "tauxDeCharge" )
+		.isInt()
+		.notEmpty(),
 	async (
 		req,
 		res
@@ -59,30 +69,5 @@ router.post(
 		   .end();
 	}
 );
-
-router.put( "/:id",
-            guard.check( "admin" ),
-            async (
-	            req,
-	            res
-            ) => {
-	            await userRepository.updateUser( req.params.id,
-	                                             req.body )
-	                                .catch( ( err ) => res.status( 500 )
-	                                                      .send( err.message ) );
-	            res.status( 204 )
-	               .end();
-            } );
-
-router.delete( "/:id",
-               guard.check( "admin" ),
-               async (
-	               req,
-	               res
-               ) => {
-	               await userRepository.deleteUser( req.params.id );
-	               res.status( 204 )
-	                  .end();
-               } );
 
 exports.initializeRoutes = () => router;
