@@ -12,7 +12,10 @@ class WebServer {
 	
 	constructor() {
 		this.app = express();
-		sequelize.sync();
+		sequelize.sync()
+		         .then( _ => {
+			         console.log( "Database initialized" );
+		         } );
 		
 		initializeConfigMiddlewares( this.app );
 		amicoMiddlewares.initializeImagesMiddleware( this.app );
@@ -23,7 +26,7 @@ class WebServer {
 	start() {
 		this.server = this.app.listen( this.port,
 		                               () => {
-			                               console.log( `Example app listening on port ${ this.port }` );
+			                               console.log( `AMiCo listening on port ${ this.port }` );
 		                               } );
 	}
 	

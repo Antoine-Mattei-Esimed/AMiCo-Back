@@ -37,11 +37,7 @@ const Utilisateur = sequelize.define(
 		},
 		password      : {
 			type      : DataTypes.STRING,
-			allowNull : false,
-			validate  : {
-				len : [ 8,
-						32 ]
-			}
+			allowNull : false
 		},
 		dateNaissance : {
 			type      : DataTypes.DATEONLY,

@@ -39,7 +39,7 @@ const initJwtMiddleware = ( app ) => {
 				         path : [
 					         "/auth/login",
 					         /\/assets*/,
-					         { url : "/users", method : "POST" }
+					         "/users/"
 				         ]
 			         } )
 	);

@@ -1,6 +1,6 @@
 /*
  * AMiCo - Logiciel de gestion de micro-entreprises.
- * Copyright (c) 2023 - Antoine Mattei
+ * Copyright (c) 2023 - Anto²ine Mattei
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const uuid                       = require( "uuid" );
+const uuid = require( "uuid" );
 const { generateHashedPassword } = require( "../security/crypto" );
-const User                       = require( "./user.model" );
+const User = require( "./user.model" );
 
 exports.createUser = async ( body ) => {
 	const hashedPassword = generateHashedPassword( body.password );
-	const user           = body;
-	user.id              = uuid.v4();
-	user.password        = hashedPassword;
+	const user = body;
+	user.id = uuid.v4();
+	user.password = hashedPassword;
 	
 	await User.create( user );
 };

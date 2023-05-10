@@ -16,38 +16,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express          = require( "express" );
-const router           = express.Router();
-const userRepository   = require( "../models/user-repository" );
+const express = require( "express" );
+const router = express.Router();
+const userRepository = require( "../models/user-repository" );
 const { validateBody } = require( "./validation/route.validator" );
-const { body }         = require( "express-validator" );
+const { body } = require( "express-validator" );
 
 router.post(
 	"/",
-	body( "prenom" )
-		.isString()
-		.notEmpty(),
-	body( "nom" )
-		.isString()
-		.notEmpty(),
-	body( "password" )
-		.isString()
-		.notEmpty()
-		.isLength( { min : 8 } ),
-	body( "dateNaissance" )
-		.isDate()
-		.notEmpty(),
-	body( "adresse" )
-		.isString()
-		.notEmpty(),
-	body( "email" )
-		.isEmail()
-		.notEmpty(),
-	body( "telephone" )
+	body( "adresseComplete" )
 		.isString()
 		.notEmpty(),
 	body( "caAnnuelMax" )
 		.isInt()
+		.notEmpty(),
+	body( "dateNaissance" )
+		.isDate()
+		.notEmpty(),
+	body( "email" )
+		.isEmail()
+		.notEmpty(),
+	body( "motDePasse" )
+		.isString()
+		.notEmpty()
+		.isLength( { min : 8 } ),
+	body( "nom" )
+		.isString()
+		.notEmpty(),
+	body( "prenom" )
+		.isString()
+		.notEmpty(),
+	body( "telephone" )
+		.isString()
 		.notEmpty(),
 	body( "tauxDeCharge" )
 		.isInt()
@@ -64,9 +64,16 @@ router.post(
 			return;
 		}
 		
+		req.body.password = req.body.motDePasse;
+		req.body.motDePasse = "";
+		req.body.adresse = req.body.adresseComplete;
+		req.body.adresseComplete = "";
+		
 		await userRepository.createUser( req.body );
 		res.status( 201 )
-		   .end();
+		   .send( {
+			          "success" : true
+		          } );
 	}
 );
 
