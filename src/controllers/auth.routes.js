@@ -34,7 +34,6 @@ router.post( "/login",
 				 req,
 				 res
 			 ) => {
-				 console.log( "Coucou" );
 				 try {
 					 validateBody( req );
 				 } catch ( e ) {
@@ -62,7 +61,7 @@ router.post( "/login",
 												  user.prenom,
 												  user.email );
 				 
-				 res.json( { token } );
+				 res.json( { success : token } );
 			 } );
 
 exports.initializeRoutes = () => router;
