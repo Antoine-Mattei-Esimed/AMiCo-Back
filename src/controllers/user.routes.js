@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express = require( "express" );
-const router = express.Router();
-const userRepository = require( "../models/user-repository" );
+const express          = require( "express" );
+const router           = express.Router();
+const userRepository   = require( "../models/user-repository" );
 const { validateBody } = require( "./validation/route.validator" );
-const { body } = require( "express-validator" );
+const { body }         = require( "express-validator" );
 
 router.post(
 	"/",
@@ -64,16 +64,16 @@ router.post(
 			return;
 		}
 		
-		req.body.password = req.body.motDePasse;
-		req.body.motDePasse = "";
-		req.body.adresse = req.body.adresseComplete;
+		req.body.password        = req.body.motDePasse;
+		req.body.motDePasse      = "";
+		req.body.adresse         = req.body.adresseComplete;
 		req.body.adresseComplete = "";
 		
 		await userRepository.createUser( req.body );
 		res.status( 201 )
 		   .send( {
-			          "success" : true
-		          } );
+					  "success" : true
+				  } );
 	}
 );
 
