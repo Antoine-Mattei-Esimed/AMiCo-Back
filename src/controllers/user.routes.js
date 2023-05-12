@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-const express          = require( "express" );
-const router           = express.Router();
-const userRepository   = require( "../models/user-repository" );
-const { validateBody } = require( "./validation/route.validator" );
-const { body }         = require( "express-validator" );
+const express            = require( "express" );
+const router             = express.Router();
+const userRepository     = require( "../models/user-repository" );
+const { validateBody }   = require( "./validation/route.validator" );
+const { body }           = require( "express-validator" );
+const { getUserByEmail } = require( "../models/user-repository" );
 
 router.post(
 	"/",
@@ -69,11 +70,18 @@ router.post(
 		req.body.adresse         = req.body.adresseComplete;
 		req.body.adresseComplete = "";
 		
-		await userRepository.createUser( req.body );
-		res.status( 201 )
-		   .send( {
-					  "success" : true
-				  } );
+		const user = await getUserByEmail( req.body.email );
+		
+		if ( user ) {
+			res.status( 409 )
+			   .send( { fail : "Cette adresse e-mail est déjà utilisée." } );
+		} else {
+			await userRepository.createUser( req.body );
+			res.status( 201 )
+			   .send( {
+						  "success" : true
+					  } );
+		}
 	}
 );
 
