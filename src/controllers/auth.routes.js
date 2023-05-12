@@ -38,7 +38,7 @@ router.post( "/login",
 					 validateBody( req );
 				 } catch ( e ) {
 					 res.status( 500 )
-						.send( e.message );
+						.send( { fail : e.message } );
 					 return;
 				 }
 				 
@@ -51,7 +51,7 @@ router.post( "/login",
 				 if ( !user || !( user && passwordsAreEqual( password,
 															 user.password ) ) ) {
 					 res.status( 401 )
-						.send( "Unauthorized" );
+						.send( { fail : "Unauthorized" } );
 					 
 					 return;
 				 }
